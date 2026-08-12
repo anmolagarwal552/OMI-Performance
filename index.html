@@ -1,0 +1,2978 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Order Manager</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f6f9;
+
+            color: #111827;
+        }
+
+
+        .container {
+            max-width: 1300px;
+
+            margin: 40px auto;
+
+            padding: 0 20px;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-bottom: 25px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .title {
+            font-size: 28px;
+
+            font-weight: 700;
+        }
+
+
+        .subtitle {
+            margin-top: 5px;
+
+            color: #6b7280;
+
+            font-size: 14px;
+        }
+
+
+        .actions {
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+        }
+
+
+        button {
+            border: none;
+
+            border-radius: 8px;
+
+            padding: 11px 17px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        button:hover {
+            transform: translateY(-1px);
+
+            opacity: 0.92;
+        }
+
+
+        .btn-add {
+            background: #2563eb;
+
+            color: white;
+        }
+
+
+        .btn-total {
+            background: #111827;
+
+            color: white;
+        }
+
+
+        .btn-copy {
+            background: #16a34a;
+
+            color: white;
+        }
+
+
+        /* =========================
+           STATISTICS
+        ========================= */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .stat-card {
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 3px 15px
+                rgba(0, 0, 0, 0.06);
+        }
+
+
+        .stat-title {
+            color: #6b7280;
+
+            font-size: 14px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .stat-value {
+            font-size: 26px;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .output-card,
+        .table-card {
+
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 3px 15px
+                rgba(0, 0, 0, 0.06);
+        }
+
+
+        .card-title {
+            font-size: 18px;
+
+            font-weight: 700;
+
+            margin-bottom: 15px;
+        }
+
+
+        .card-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-bottom: 15px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .card-header .card-title {
+            margin-bottom: 0;
+        }
+
+
+        /* =========================
+           SEARCH
+        ========================= */
+
+        .search-box {
+            width: 300px;
+
+            max-width: 100%;
+
+            padding: 10px 12px;
+
+            border:
+                1px solid #d1d5db;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            font-size: 14px;
+        }
+
+
+        .search-box:focus {
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(37, 99, 235, 0.08);
+        }
+
+
+        /* =========================
+           OUTPUT TEXTAREA
+        ========================= */
+
+        #outputText {
+
+            width: 100%;
+
+            min-height: 300px;
+
+            resize: vertical;
+
+            padding: 15px;
+
+            border:
+                1px solid #d1d5db;
+
+            border-radius: 8px;
+
+            font-family:
+                Consolas,
+                Monaco,
+                monospace;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+
+            outline: none;
+
+            background: #ffffff;
+
+            color: #111827;
+
+            white-space: pre;
+
+            overflow: auto;
+        }
+
+
+        #outputText:focus {
+
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(37, 99, 235, 0.08);
+        }
+
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 1000px;
+        }
+
+
+        th,
+        td {
+
+            padding: 12px 13px;
+
+            border-bottom:
+                1px solid #e5e7eb;
+
+            text-align: left;
+
+            vertical-align: middle;
+        }
+
+
+        th {
+
+            background: #f9fafb;
+
+            font-weight: 700;
+
+            color: #111827;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 2;
+        }
+
+
+        td {
+
+            font-family:
+                Consolas,
+                Monaco,
+                monospace;
+
+            font-size: 13px;
+        }
+
+
+        td a {
+
+            color: #2563eb;
+
+            text-decoration: none;
+
+            word-break: break-all;
+        }
+
+
+        td a:hover {
+
+            text-decoration: underline;
+        }
+
+
+        .empty {
+
+            text-align: center;
+
+            padding: 35px;
+
+            color: #9ca3af;
+        }
+
+
+        /* =========================
+           EDITING ROW
+        ========================= */
+
+        .editing-row {
+            background: #eff6ff;
+        }
+
+
+        .table-input {
+
+            width: 100%;
+
+            min-width: 90px;
+
+            padding: 8px 9px;
+
+            border:
+                1px solid #2563eb;
+
+            border-radius: 6px;
+
+            font-family:
+                Consolas,
+                Monaco,
+                monospace;
+
+            font-size: 13px;
+
+            outline: none;
+
+            background: white;
+        }
+
+
+        .table-input:focus {
+
+            border-color: #1d4ed8;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(37, 99, 235, 0.10);
+        }
+
+
+        .url-input {
+            min-width: 280px;
+        }
+
+
+        .edit-actions-row td {
+
+            background: #f8fafc;
+
+            text-align: right;
+
+            padding: 10px 13px;
+        }
+
+
+        .btn-edit {
+
+            background: #2563eb;
+
+            color: white;
+
+            padding: 7px 12px;
+
+            font-size: 12px;
+        }
+
+
+        .btn-save-edit {
+
+            background: #16a34a;
+
+            color: white;
+
+            padding: 8px 15px;
+
+            font-size: 13px;
+        }
+
+
+        .btn-cancel-edit {
+
+            background: #e5e7eb;
+
+            color: #111827;
+
+            padding: 8px 15px;
+
+            font-size: 13px;
+
+            margin-left: 6px;
+        }
+
+
+        .btn-delete {
+
+            background: #dc2626;
+
+            color: white;
+
+            padding: 7px 12px;
+
+            font-size: 12px;
+
+            margin-left: 5px;
+        }
+
+
+        /* =========================
+           MODAL
+        ========================= */
+
+        .modal-overlay {
+
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(0, 0, 0, 0.55);
+
+            z-index: 1000;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+
+        .modal-overlay.active {
+
+            display: flex;
+        }
+
+
+        .modal {
+
+            width: 100%;
+
+            max-width: 550px;
+
+            max-height: 90vh;
+
+            overflow-y: auto;
+
+            background: white;
+
+            border-radius: 14px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 20px 60px
+                rgba(0, 0, 0, 0.25);
+
+            animation:
+                modalOpen
+                0.2s ease;
+        }
+
+
+        @keyframes modalOpen {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(-15px)
+                    scale(0.98);
+            }
+
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+        }
+
+
+        .modal-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 22px;
+        }
+
+
+        .modal-title {
+
+            font-size: 22px;
+
+            font-weight: 700;
+        }
+
+
+        .close-btn {
+
+            background: transparent;
+
+            color: #6b7280;
+
+            font-size: 25px;
+
+            padding: 0 5px;
+        }
+
+
+        .close-btn:hover {
+
+            transform: none;
+
+            opacity: 1;
+
+            background: #f3f4f6;
+        }
+
+
+        /* =========================
+           FORM
+        ========================= */
+
+        .form-group {
+
+            margin-bottom: 16px;
+        }
+
+
+        label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+
+        input {
+
+            width: 100%;
+
+            padding: 12px 13px;
+
+            border:
+                1px solid #d1d5db;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+
+            outline: none;
+        }
+
+
+        input:focus {
+
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(37, 99, 235, 0.1);
+        }
+
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+
+            -webkit-appearance: none;
+
+            margin: 0;
+        }
+
+
+        input[type="number"] {
+
+            -moz-appearance: textfield;
+
+            appearance: textfield;
+        }
+
+
+        /* =========================
+           MODAL ACTIONS
+        ========================= */
+
+        .modal-actions {
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+
+            margin-top: 25px;
+        }
+
+
+        .btn-cancel {
+
+            background: #e5e7eb;
+
+            color: #111827;
+        }
+
+
+        .btn-submit {
+
+            background: #2563eb;
+
+            color: white;
+        }
+
+
+        /* =========================
+           MESSAGE
+        ========================= */
+
+        .message {
+
+            position: fixed;
+
+            bottom: 25px;
+
+            right: 25px;
+
+            background: #111827;
+
+            color: white;
+
+            padding: 12px 18px;
+
+            border-radius: 8px;
+
+            display: none;
+
+            z-index: 2000;
+
+            font-size: 14px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0, 0, 0, 0.20);
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .stats {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .container {
+
+                margin: 20px auto;
+
+                padding: 0 12px;
+            }
+
+
+            .stats {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .header {
+
+                align-items: stretch;
+            }
+
+
+            .actions {
+
+                width: 100%;
+            }
+
+
+            .actions button {
+
+                flex: 1;
+            }
+
+
+            .modal {
+
+                padding: 20px;
+            }
+
+
+            .title {
+
+                font-size: 24px;
+            }
+
+
+            #outputText {
+
+                min-height: 250px;
+
+                font-size: 12px;
+            }
+
+
+            .message {
+
+                left: 15px;
+
+                right: 15px;
+
+                bottom: 15px;
+
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <div class="header">
+
+        <div>
+
+            <div class="title">
+                Order Manager
+            </div>
+
+            <div class="subtitle">
+                Manage unique URLs and order metrics
+            </div>
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                class="btn-add"
+                type="button"
+                onclick="openModal()"
+            >
+                + Add Order
+            </button>
+
+
+            <button
+                class="btn-total"
+                type="button"
+                onclick="showTotalOrders()"
+            >
+                Total Orders:
+                <span id="totalOrdersButton">0</span>
+            </button>
+
+
+            <button
+                class="btn-copy"
+                type="button"
+                onclick="copyOutput()"
+            >
+                Copy
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         STATISTICS
+    ========================= -->
+
+    <div class="stats">
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Total Orders
+            </div>
+
+            <div
+                class="stat-value"
+                id="totalOrders"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Total Views
+            </div>
+
+            <div
+                class="stat-value"
+                id="totalViews"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Total Likes
+            </div>
+
+            <div
+                class="stat-value"
+                id="totalLikes"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Total Shares
+            </div>
+
+            <div
+                class="stat-value"
+                id="totalShares"
+            >
+                0
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================
+         OUTPUT
+    ========================= -->
+
+    <div class="output-card">
+
+        <div class="card-title">
+            Order Data
+        </div>
+
+
+        <textarea
+            id="outputText"
+            readonly
+            spellcheck="false"
+            placeholder="Submitted order data will appear here..."
+        ></textarea>
+
+    </div>
+
+
+    <!-- =========================
+         TABLE
+    ========================= -->
+
+    <div class="table-card">
+
+
+        <div class="card-header">
+
+            <div class="card-title">
+                Order Metrics
+            </div>
+
+
+            <input
+                type="search"
+                id="searchBox"
+                class="search-box"
+                placeholder="Search URL or Order ID..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ORDER
+                        </th>
+
+                        <th>
+                            URL
+                        </th>
+
+                        <th>
+                            VIEWS
+                        </th>
+
+                        <th>
+                            LIKES
+                        </th>
+
+                        <th>
+                            SHARES
+                        </th>
+
+                        <th>
+                            REPOST
+                        </th>
+
+                        <th>
+                            ACTION
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="ordersTable">
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="empty"
+                        >
+                            No orders added yet
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================
+     MODAL
+========================= -->
+
+<div
+    class="modal-overlay"
+    id="modalOverlay"
+>
+
+
+    <div class="modal">
+
+
+        <div class="modal-header">
+
+            <div class="modal-title">
+                Add Order
+            </div>
+
+
+            <button
+                class="close-btn"
+                type="button"
+                onclick="closeModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="orderForm">
+
+
+            <!-- URL -->
+
+            <div class="form-group">
+
+                <label for="url">
+                    1. URL
+                </label>
+
+                <input
+                    type="url"
+                    id="url"
+                    placeholder="https://example.com/..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <!-- VIEWS -->
+
+            <div class="form-group">
+
+                <label for="views">
+                    2. Views Count
+                </label>
+
+                <input
+                    type="number"
+                    id="views"
+                    min="0"
+                    step="1"
+                    inputmode="numeric"
+                    placeholder="1000000"
+                >
+
+            </div>
+
+
+            <!-- LIKES -->
+
+            <div class="form-group">
+
+                <label for="likes">
+                    3. Likes
+                </label>
+
+                <input
+                    type="number"
+                    id="likes"
+                    min="0"
+                    step="1"
+                    inputmode="numeric"
+                    placeholder="15000"
+                >
+
+            </div>
+
+
+            <!-- SHARES -->
+
+            <div class="form-group">
+
+                <label for="shares">
+                    4. Shares
+                </label>
+
+                <input
+                    type="number"
+                    id="shares"
+                    min="0"
+                    step="1"
+                    inputmode="numeric"
+                    placeholder="214"
+                >
+
+            </div>
+
+
+            <!-- REPOSTS -->
+
+            <div class="form-group">
+
+                <label for="reposts">
+                    5. Reposts
+                </label>
+
+                <input
+                    type="number"
+                    id="reposts"
+                    min="0"
+                    step="1"
+                    inputmode="numeric"
+                    placeholder="500"
+                >
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="btn-cancel"
+                    onclick="closeModal()"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn-submit"
+                >
+                    Submit
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     MESSAGE
+========================= -->
+
+<div
+    class="message"
+    id="message"
+>
+    Done
+</div>
+
+
+<script>
+
+
+    /* =====================================================
+       FIXED SERVICE IDs
+    ===================================================== */
+
+    const SERVICE_IDS = {
+
+        views: "1432",
+
+        likes: "386",
+
+        shares: "486",
+
+        reposts: "1530"
+
+    };
+
+
+    /* =====================================================
+       STORAGE
+    ===================================================== */
+
+    const STORAGE_KEY =
+        "order_manager_orders_v1";
+
+    const COUNTER_KEY =
+        "order_manager_counter_v1";
+
+
+    /* =====================================================
+       ORDER STORAGE
+    ===================================================== */
+
+    let orders =
+        loadOrders();
+
+    let orderCounter =
+        loadCounter();
+
+    let editingOrderId = null;
+
+
+    /* =====================================================
+       INITIALIZE
+    ===================================================== */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+
+            updateAll();
+
+        }
+    );
+
+
+    /* =====================================================
+       LOAD ORDERS
+    ===================================================== */
+
+    function loadOrders() {
+
+        try {
+
+            const saved =
+                localStorage.getItem(
+                    STORAGE_KEY
+                );
+
+            if (!saved) {
+                return [];
+            }
+
+            const parsed =
+                JSON.parse(saved);
+
+            return Array.isArray(parsed)
+                ? parsed
+                : [];
+
+        }
+        catch (error) {
+
+            return [];
+
+        }
+
+    }
+
+
+    /* =====================================================
+       LOAD COUNTER
+    ===================================================== */
+
+    function loadCounter() {
+
+        try {
+
+            const saved =
+                localStorage.getItem(
+                    COUNTER_KEY
+                );
+
+            return Number(saved) || 0;
+
+        }
+        catch (error) {
+
+            return 0;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       SAVE DATA
+    ===================================================== */
+
+    function saveData() {
+
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(orders)
+        );
+
+
+        localStorage.setItem(
+            COUNTER_KEY,
+            String(orderCounter)
+        );
+
+    }
+
+
+    /* =====================================================
+       OPEN MODAL
+    ===================================================== */
+
+    function openModal() {
+
+        document
+            .getElementById("modalOverlay")
+            .classList.add("active");
+
+
+        document
+            .getElementById("url")
+            .focus();
+
+    }
+
+
+    /* =====================================================
+       CLOSE MODAL
+    ===================================================== */
+
+    function closeModal() {
+
+        document
+            .getElementById("modalOverlay")
+            .classList.remove("active");
+
+
+        document
+            .getElementById("orderForm")
+            .reset();
+
+    }
+
+
+    /* =====================================================
+       OUTSIDE CLICK
+    ===================================================== */
+
+    document
+        .getElementById("modalOverlay")
+        .addEventListener(
+            "click",
+            function(event) {
+
+                if (
+                    event.target === this
+                ) {
+
+                    closeModal();
+
+                }
+
+            }
+        );
+
+
+    /* =====================================================
+       ESCAPE
+    ===================================================== */
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                const modal =
+                    document.getElementById(
+                        "modalOverlay"
+                    );
+
+
+                if (
+                    modal.classList.contains(
+                        "active"
+                    )
+                ) {
+
+                    closeModal();
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       NUMBER INPUTS
+    ===================================================== */
+
+    const numberInputs = [
+
+        "views",
+
+        "likes",
+
+        "shares",
+
+        "reposts"
+
+    ];
+
+
+    numberInputs.forEach(
+        function(id) {
+
+            const input =
+                document.getElementById(id);
+
+
+            input.addEventListener(
+                "input",
+                function() {
+
+                    this.value =
+                        this.value.replace(
+                            /[^0-9]/g,
+                            ""
+                        );
+
+                }
+            );
+
+        }
+    );
+
+
+    /* =====================================================
+       NORMALIZE URL
+    ===================================================== */
+
+    function normalizeURL(url) {
+
+        try {
+
+            const parsed =
+                new URL(
+                    url.trim()
+                );
+
+
+            /*
+             * Convert hostname to lowercase.
+             */
+
+            parsed.hostname =
+                parsed.hostname.toLowerCase();
+
+
+            /*
+             * Remove hash.
+             */
+
+            parsed.hash = "";
+
+
+            /*
+             * Remove trailing slash
+             * except root URL.
+             */
+
+            if (
+                parsed.pathname !== "/" &&
+                parsed.pathname.endsWith("/")
+            ) {
+
+                parsed.pathname =
+                    parsed.pathname.replace(
+                        /\/+$/,
+                        ""
+                    );
+
+            }
+
+
+            return parsed.toString();
+
+        }
+        catch (error) {
+
+            return url.trim();
+
+        }
+
+    }
+
+
+    /* =====================================================
+       URL VALIDATION
+    ===================================================== */
+
+    function isValidURL(url) {
+
+        try {
+
+            const parsed =
+                new URL(url);
+
+
+            return (
+                parsed.protocol === "http:" ||
+                parsed.protocol === "https:"
+            );
+
+        }
+        catch (error) {
+
+            return false;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       DUPLICATE URL CHECK
+    ===================================================== */
+
+    function isDuplicateURL(
+        url,
+        excludeOrderId = null
+    ) {
+
+        if (!url) {
+            return false;
+        }
+
+
+        const normalized =
+            normalizeURL(url);
+
+
+        return orders.some(
+            function(order) {
+
+                if (
+                    excludeOrderId &&
+                    order.id ===
+                        excludeOrderId
+                ) {
+
+                    return false;
+
+                }
+
+
+                return (
+                    normalizeURL(
+                        order.url
+                    ) === normalized
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       SUBMIT NEW ORDER
+    ===================================================== */
+
+    document
+        .getElementById("orderForm")
+        .addEventListener(
+            "submit",
+            function(event) {
+
+                event.preventDefault();
+
+
+                let url =
+                    document
+                        .getElementById("url")
+                        .value
+                        .trim();
+
+
+                const views =
+                    document
+                        .getElementById("views")
+                        .value
+                        .trim();
+
+
+                const likes =
+                    document
+                        .getElementById("likes")
+                        .value
+                        .trim();
+
+
+                const shares =
+                    document
+                        .getElementById("shares")
+                        .value
+                        .trim();
+
+
+                const reposts =
+                    document
+                        .getElementById("reposts")
+                        .value
+                        .trim();
+
+
+                /* =========================================
+                   AT LEAST ONE VALUE
+                ========================================= */
+
+                if (
+                    url === "" &&
+                    views === "" &&
+                    likes === "" &&
+                    shares === "" &&
+                    reposts === ""
+                ) {
+
+                    showMessage(
+                        "Please enter at least one value."
+                    );
+
+                    return;
+
+                }
+
+
+                /* =========================================
+                   URL VALIDATION
+                ========================================= */
+
+                if (url !== "") {
+
+                    if (!isValidURL(url)) {
+
+                        showMessage(
+                            "Please enter a valid URL."
+                        );
+
+                        return;
+
+                    }
+
+
+                    url =
+                        normalizeURL(url);
+
+
+                    /* =====================================
+                       UNIQUE URL
+                    ===================================== */
+
+                    if (
+                        isDuplicateURL(url)
+                    ) {
+
+                        showMessage(
+                            "This URL already exists."
+                        );
+
+                        return;
+
+                    }
+
+                }
+
+
+                /* =========================================
+                   CREATE ORDER
+                ========================================= */
+
+                orderCounter++;
+
+
+                const order = {
+
+                    id:
+                        "ORD-" +
+                        String(
+                            orderCounter
+                        ).padStart(
+                            5,
+                            "0"
+                        ),
+
+                    url: url,
+
+                    views: views,
+
+                    likes: likes,
+
+                    shares: shares,
+
+                    reposts: reposts
+
+                };
+
+
+                orders.push(order);
+
+
+                saveData();
+
+
+                updateAll();
+
+
+                closeModal();
+
+
+                showMessage(
+                    "Order added successfully."
+                );
+
+            }
+        );
+
+
+    /* =====================================================
+       UPDATE EVERYTHING
+    ===================================================== */
+
+    function updateAll() {
+
+        updateOutput();
+
+        updateTable();
+
+        updateStatistics();
+
+    }
+
+
+    /* =====================================================
+       UPDATE OUTPUT
+    ===================================================== */
+
+    function updateOutput() {
+
+        const lines = [];
+
+
+        orders.forEach(
+            function(order) {
+
+
+                /* VIEWS */
+
+                if (
+                    order.views !== ""
+                ) {
+
+                    lines.push(
+
+                        SERVICE_IDS.views +
+
+                        " | " +
+
+                        order.url +
+
+                        " | " +
+
+                        order.views +
+
+                        ","
+
+                    );
+
+                }
+
+
+                /* LIKES */
+
+                if (
+                    order.likes !== ""
+                ) {
+
+                    lines.push(
+
+                        SERVICE_IDS.likes +
+
+                        " | " +
+
+                        order.url +
+
+                        " | " +
+
+                        order.likes +
+
+                        ","
+
+                    );
+
+                }
+
+
+                /* SHARES */
+
+                if (
+                    order.shares !== ""
+                ) {
+
+                    lines.push(
+
+                        SERVICE_IDS.shares +
+
+                        " | " +
+
+                        order.url +
+
+                        " | " +
+
+                        order.shares +
+
+                        ","
+
+                    );
+
+                }
+
+
+                /* REPOSTS */
+
+                if (
+                    order.reposts !== ""
+                ) {
+
+                    lines.push(
+
+                        SERVICE_IDS.reposts +
+
+                        " | " +
+
+                        order.url +
+
+                        " | " +
+
+                        order.reposts +
+
+                        ","
+
+                    );
+
+                }
+
+            }
+        );
+
+
+        document
+            .getElementById("outputText")
+            .value =
+            lines.join("\n");
+
+    }
+
+
+    /* =====================================================
+       SEARCH
+    ===================================================== */
+
+    document
+        .getElementById("searchBox")
+        .addEventListener(
+            "input",
+            function() {
+
+                updateTable();
+
+            }
+        );
+
+
+    function getSearchValue() {
+
+        return document
+            .getElementById("searchBox")
+            .value
+            .trim()
+            .toLowerCase();
+
+    }
+
+
+    /* =====================================================
+       FILTERED ORDERS
+    ===================================================== */
+
+    function getFilteredOrders() {
+
+        const search =
+            getSearchValue();
+
+
+        if (!search) {
+
+            return orders;
+
+        }
+
+
+        return orders.filter(
+            function(order) {
+
+                return (
+
+                    order.id
+                        .toLowerCase()
+                        .includes(search)
+
+                    ||
+
+                    order.url
+                        .toLowerCase()
+                        .includes(search)
+
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       UPDATE TABLE
+    ===================================================== */
+
+    function updateTable() {
+
+        const table =
+            document.getElementById(
+                "ordersTable"
+            );
+
+
+        const filteredOrders =
+            getFilteredOrders();
+
+
+        if (
+            filteredOrders.length === 0
+        ) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="7"
+                        class="empty"
+                    >
+
+                        ${
+                            orders.length === 0
+
+                            ?
+
+                            "No orders added yet"
+
+                            :
+
+                            "No matching orders found"
+                        }
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        table.innerHTML =
+            filteredOrders
+                .map(
+                    function(order) {
+
+                        if (
+                            editingOrderId ===
+                            order.id
+                        ) {
+
+                            return createEditRow(
+                                order
+                            );
+
+                        }
+
+
+                        return createNormalRow(
+                            order
+                        );
+
+                    }
+                )
+                .join("");
+
+    }
+
+
+    /* =====================================================
+       NORMAL ROW
+    ===================================================== */
+
+    function createNormalRow(order) {
+
+        return `
+
+            <tr>
+
+                <td>
+                    ${escapeHtml(order.id)}
+                </td>
+
+
+                <td>
+
+                    ${
+                        order.url
+
+                        ?
+
+                        `
+                        <a
+                            href="${escapeAttribute(
+                                order.url
+                            )}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            ${escapeHtml(
+                                order.url
+                            )}
+                        </a>
+                        `
+
+                        :
+
+                        "-"
+                    }
+
+                </td>
+
+
+                <td>
+                    ${formatNumber(
+                        order.views
+                    )}
+                </td>
+
+
+                <td>
+                    ${formatNumber(
+                        order.likes
+                    )}
+                </td>
+
+
+                <td>
+                    ${formatNumber(
+                        order.shares
+                    )}
+                </td>
+
+
+                <td>
+                    ${formatNumber(
+                        order.reposts
+                    )}
+                </td>
+
+
+                <td>
+
+                    <button
+                        type="button"
+                        class="btn-edit"
+                        onclick="editOrder('${escapeAttribute(
+                            order.id
+                        )}')"
+                    >
+                        Edit
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn-delete"
+                        onclick="deleteOrder('${escapeAttribute(
+                            order.id
+                        )}')"
+                    >
+                        Delete
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+
+    /* =====================================================
+       EDIT ROW
+    ===================================================== */
+
+    function createEditRow(order) {
+
+        return `
+
+            <tr class="editing-row">
+
+                <td>
+                    ${escapeHtml(order.id)}
+                </td>
+
+
+                <td>
+
+                    <input
+                        type="url"
+                        id="edit-url-${escapeAttribute(
+                            order.id
+                        )}"
+                        value="${escapeAttribute(
+                            order.url
+                        )}"
+                        class="table-input url-input"
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        type="number"
+                        id="edit-views-${escapeAttribute(
+                            order.id
+                        )}"
+                        value="${escapeAttribute(
+                            order.views
+                        )}"
+                        min="0"
+                        class="table-input"
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        type="number"
+                        id="edit-likes-${escapeAttribute(
+                            order.id
+                        )}"
+                        value="${escapeAttribute(
+                            order.likes
+                        )}"
+                        min="0"
+                        class="table-input"
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        type="number"
+                        id="edit-shares-${escapeAttribute(
+                            order.id
+                        )}"
+                        value="${escapeAttribute(
+                            order.shares
+                        )}"
+                        min="0"
+                        class="table-input"
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        type="number"
+                        id="edit-reposts-${escapeAttribute(
+                            order.id
+                        )}"
+                        value="${escapeAttribute(
+                            order.reposts
+                        )}"
+                        min="0"
+                        class="table-input"
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        type="button"
+                        class="btn-save-edit"
+                        onclick="saveOrder('${escapeAttribute(
+                            order.id
+                        )}')"
+                    >
+                        Save
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn-cancel-edit"
+                        onclick="cancelEdit()"
+                    >
+                        Cancel
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+
+    /* =====================================================
+       EDIT ORDER
+    ===================================================== */
+
+    function editOrder(orderId) {
+
+        if (
+            editingOrderId !== null &&
+            editingOrderId !== orderId
+        ) {
+
+            showMessage(
+                "Please save or cancel the current edit."
+            );
+
+            return;
+
+        }
+
+
+        editingOrderId =
+            orderId;
+
+
+        updateTable();
+
+
+        setTimeout(
+            function() {
+
+                const input =
+                    document.getElementById(
+                        "edit-url-" +
+                        orderId
+                    );
+
+
+                if (input) {
+
+                    input.focus();
+
+                    input.select();
+
+                }
+
+            },
+            50
+        );
+
+    }
+
+
+    /* =====================================================
+       SAVE ORDER
+    ===================================================== */
+
+    function saveOrder(orderId) {
+
+        const order =
+            orders.find(
+                function(item) {
+
+                    return (
+                        item.id ===
+                        orderId
+                    );
+
+                }
+            );
+
+
+        if (!order) {
+            return;
+        }
+
+
+        let url =
+            document
+                .getElementById(
+                    "edit-url-" +
+                    orderId
+                )
+                .value
+                .trim();
+
+
+        const views =
+            document
+                .getElementById(
+                    "edit-views-" +
+                    orderId
+                )
+                .value
+                .trim();
+
+
+        const likes =
+            document
+                .getElementById(
+                    "edit-likes-" +
+                    orderId
+                )
+                .value
+                .trim();
+
+
+        const shares =
+            document
+                .getElementById(
+                    "edit-shares-" +
+                    orderId
+                )
+                .value
+                .trim();
+
+
+        const reposts =
+            document
+                .getElementById(
+                    "edit-reposts-" +
+                    orderId
+                )
+                .value
+                .trim();
+
+
+        /* =========================================
+           URL
+        ========================================= */
+
+        if (url !== "") {
+
+            if (!isValidURL(url)) {
+
+                showMessage(
+                    "Please enter a valid URL."
+                );
+
+                return;
+
+            }
+
+
+            url =
+                normalizeURL(url);
+
+
+            /* =====================================
+               UNIQUE URL
+            ===================================== */
+
+            if (
+                isDuplicateURL(
+                    url,
+                    orderId
+                )
+            ) {
+
+                showMessage(
+                    "This URL already exists."
+                );
+
+                return;
+
+            }
+
+        }
+
+
+        /* =========================================
+           SAVE VALUES
+        ========================================= */
+
+        order.url =
+            url;
+
+        order.views =
+            views;
+
+        order.likes =
+            likes;
+
+        order.shares =
+            shares;
+
+        order.reposts =
+            reposts;
+
+
+        editingOrderId =
+            null;
+
+
+        saveData();
+
+
+        updateAll();
+
+
+        showMessage(
+            "Order updated successfully."
+        );
+
+    }
+
+
+    /* =====================================================
+       CANCEL EDIT
+    ===================================================== */
+
+    function cancelEdit() {
+
+        editingOrderId =
+            null;
+
+
+        updateTable();
+
+    }
+
+
+    /* =====================================================
+       DELETE ORDER
+    ===================================================== */
+
+    function deleteOrder(orderId) {
+
+        const order =
+            orders.find(
+                function(item) {
+
+                    return (
+                        item.id ===
+                        orderId
+                    );
+
+                }
+            );
+
+
+        if (!order) {
+            return;
+        }
+
+
+        const confirmed =
+            confirm(
+                "Delete order " +
+                order.id +
+                "?\n\n" +
+                order.url
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        orders =
+            orders.filter(
+                function(item) {
+
+                    return (
+                        item.id !==
+                        orderId
+                    );
+
+                }
+            );
+
+
+        if (
+            editingOrderId ===
+            orderId
+        ) {
+
+            editingOrderId =
+                null;
+
+        }
+
+
+        saveData();
+
+
+        updateAll();
+
+
+        showMessage(
+            "Order deleted."
+        );
+
+    }
+
+
+    /* =====================================================
+       TOTAL ORDERS
+    ===================================================== */
+
+    function showTotalOrders() {
+
+        showMessage(
+
+            "Total Orders: " +
+            orders.length
+
+        );
+
+    }
+
+
+    /* =====================================================
+       STATISTICS
+    ===================================================== */
+
+    function updateStatistics() {
+
+        const totalViews =
+            orders.reduce(
+                function(sum, order) {
+
+                    return (
+                        sum +
+                        numericValue(
+                            order.views
+                        )
+                    );
+
+                },
+                0
+            );
+
+
+        const totalLikes =
+            orders.reduce(
+                function(sum, order) {
+
+                    return (
+                        sum +
+                        numericValue(
+                            order.likes
+                        )
+                    );
+
+                },
+                0
+            );
+
+
+        const totalShares =
+            orders.reduce(
+                function(sum, order) {
+
+                    return (
+                        sum +
+                        numericValue(
+                            order.shares
+                        )
+                    );
+
+                },
+                0
+            );
+
+
+        document
+            .getElementById(
+                "totalOrders"
+            )
+            .textContent =
+            orders.length;
+
+
+        document
+            .getElementById(
+                "totalOrdersButton"
+            )
+            .textContent =
+            orders.length;
+
+
+        document
+            .getElementById(
+                "totalViews"
+            )
+            .textContent =
+            totalViews.toLocaleString(
+                "en-IN"
+            );
+
+
+        document
+            .getElementById(
+                "totalLikes"
+            )
+            .textContent =
+            totalLikes.toLocaleString(
+                "en-IN"
+            );
+
+
+        document
+            .getElementById(
+                "totalShares"
+            )
+            .textContent =
+            totalShares.toLocaleString(
+                "en-IN"
+            );
+
+    }
+
+
+    /* =====================================================
+       COPY OUTPUT
+    ===================================================== */
+
+    async function copyOutput() {
+
+        const text =
+            document
+                .getElementById(
+                    "outputText"
+                )
+                .value;
+
+
+        if (
+            text.trim() === ""
+        ) {
+
+            showMessage(
+                "There is no order data to copy."
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            await navigator
+                .clipboard
+                .writeText(
+                    text
+                );
+
+
+            showMessage(
+                "Copied successfully!"
+            );
+
+        }
+        catch (error) {
+
+            const textarea =
+                document.getElementById(
+                    "outputText"
+                );
+
+
+            textarea.focus();
+
+            textarea.select();
+
+
+            document.execCommand(
+                "copy"
+            );
+
+
+            showMessage(
+                "Copied successfully!"
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       MESSAGE
+    ===================================================== */
+
+    let messageTimer;
+
+
+    function showMessage(text) {
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+
+        message.textContent =
+            text;
+
+
+        message.style.display =
+            "block";
+
+
+        clearTimeout(
+            messageTimer
+        );
+
+
+        messageTimer =
+            setTimeout(
+                function() {
+
+                    message.style.display =
+                        "none";
+
+                },
+                2500
+            );
+
+    }
+
+
+    /* =====================================================
+       NUMBER
+    ===================================================== */
+
+    function numericValue(value) {
+
+        if (
+            value === "" ||
+            value === null ||
+            value === undefined
+        ) {
+
+            return 0;
+
+        }
+
+
+        return (
+            Number(value) || 0
+        );
+
+    }
+
+
+    function formatNumber(value) {
+
+        if (
+            value === "" ||
+            value === null ||
+            value === undefined
+        ) {
+
+            return "-";
+
+        }
+
+
+        return Number(value)
+            .toLocaleString(
+                "en-IN"
+            );
+
+    }
+
+
+    /* =====================================================
+       SECURITY
+    ===================================================== */
+
+    function escapeHtml(value) {
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+    function escapeAttribute(value) {
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+</script>
+
+
+</body>
+
+</html>
